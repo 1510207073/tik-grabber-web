@@ -4,7 +4,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'tik-grabber-web',
+    title: 'Tik Grabber',
     htmlAttrs: {
       lang: 'en'
     },

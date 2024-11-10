@@ -1,5 +1,5 @@
 {
-  "name": "tik-grabber-web",
+  "name": "tik-grabber",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -19,6 +19,8 @@
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.12.2",
     "gh-pages": "^6.2.0",
-    "postcss": "^8.4.17"
+    "postcss": "^8.4.17",
+    "svg-sprite-loader": "^6.0.11",
+    "vue-svg-loader": "^0.16.0"
   }
 }
