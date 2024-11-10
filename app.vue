@@ -26,22 +26,14 @@
           target="_blank"
           rel="noopener noreferrer"
         >
-          <img
-            src="~assets/icons/svgs/appstore.svg"
-            class="h-12"
-            alt="App Store"
-          />
+          <AppStore class="h-12" />
         </a>
         <a
           href="https://play.google.com/store/apps/details?id=com.tikgrabber"
           target="_blank"
           rel="noopener noreferrer"
         >
-          <img
-            src="~assets/icons/svgs/googleplay.svg"
-            class="h-12"
-            alt="Google Play"
-          />
+        <GooglePlay class="h-12" />
         </a>
       </div>
     </div>
@@ -52,8 +44,16 @@
 </template>
 
 <script>
+
+import AppStore from '@/assets/icons/appstore.svg'
+import GooglePlay from '@/assets/icons/googleplay.svg'
+
 export default {
   name: "App",
+  components: {
+    AppStore, // 注册 AppStore 组件
+    GooglePlay // 注册 GooglePlay 组件
+  },
   data() {
     return {
       fullText: "A free download tool for getting TikTok videos.",
