@@ -6,7 +6,8 @@
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate"
+    "generate": "nuxt generate",
+    "deploy": "gh-pages -d dist -r git@github.com:1510207073/tik-grabber-web.git"
   },
   "dependencies": {
     "core-js": "^3.25.3",
@@ -16,7 +17,8 @@
     "vue-template-compiler": "^2.7.10"
   },
   "devDependencies": {
-    "@nuxtjs/tailwindcss": "^5.3.3",
+    "@nuxtjs/tailwindcss": "^6.12.2",
+    "gh-pages": "^6.2.0",
     "postcss": "^8.4.17"
   }
 }
