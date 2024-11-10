@@ -19,7 +19,7 @@ git add -A
 git commit -m 'deploy'
 
 # 推送到 gh-pages 分支
-git push -f git@github.com:1510207073/tik-grabber.git main:gh-pages
+git push -f git@github.com:1510207073/tik-grabber-web.git main:gh-pages
 
 # 返回项目根目录
 cd ..

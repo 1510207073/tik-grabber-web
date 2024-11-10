@@ -7,7 +7,7 @@
         </div>
       </div>
       <div class="mt-4 text-center relative">
-        <div class="typing-container pt-8 pb-4"> <!-- 添加内边距确保动画不被裁切 -->
+        <div class="typing-container pt-8 pb-4">
           <span
             v-for="(word, wordIndex) in displayWords"
             :key="wordIndex"
@@ -15,7 +15,7 @@
             :style="getWordAnimationStyle(wordIndex)"
           >
             {{ word }}
-            <span v-if="wordIndex < displayWords.length - 1">&nbsp;</span>
+            <span v-if="wordIndex < displayWords.length - 1"> </span>
           </span>
           <span class="cursor" v-if="isTyping"></span>
         </div>
@@ -33,7 +33,7 @@
           target="_blank"
           rel="noopener noreferrer"
         >
-        <GooglePlay class="h-12" />
+          <GooglePlay class="h-12" />
         </a>
       </div>
     </div>
@@ -43,116 +43,96 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted } from 'vue';
+import AppStore from '@/assets/icons/appstore.svg';
+import GooglePlay from '@/assets/icons/googleplay.svg';
 
-import AppStore from '@/assets/icons/appstore.svg'
-import GooglePlay from '@/assets/icons/googleplay.svg'
+const fullText = ref("A free download tool for getting TikTok videos.");
+const displayText = ref("");
+const displayWords = ref([]);
+const animationProgress = ref(0);
+const isTyping = ref(false);
+const isAnimating = ref(false);
+const currentIndex = ref(0);
 
-export default {
-  name: "App",
-  components: {
-    AppStore, // 注册 AppStore 组件
-    GooglePlay // 注册 GooglePlay 组件
-  },
-  data() {
-    return {
-      fullText: "A free download tool for getting TikTok videos.",
-      displayText: "",
-      displayWords: [],
-      animationProgress: 0,
-      isTyping: false,
-      isAnimating: false,
-      currentIndex: 0
-    };
-  },
-  mounted() {
-    this.startTyping();
-  },
-  methods: {
-    startTyping() {
-      this.isTyping = true;
-      this.displayText = "";
-      this.displayWords = [];
-      this.currentIndex = 0;
-      this.animationProgress = 0;
-      this.typeNextChar();
-    },
-    typeNextChar() {
-      if (this.currentIndex < this.fullText.length) {
-        this.displayText += this.fullText[this.currentIndex];
-        this.displayWords = this.displayText.split(' ');
-        this.currentIndex++;
-        setTimeout(() => this.typeNextChar(), 100);
-      } else {
-        this.isTyping = false;
-        setTimeout(() => this.startRopeAnimation(), 500);
-      }
-    },
-    startRopeAnimation() {
-      this.isAnimating = true;
-      let startTime = null;
-      const animationDuration = 2000; // 增加动画持续时间，让每个单词都有足够时间完成动画
+onMounted(() => {
+  startTyping();
+});
 
-      const animate = (timestamp) => {
-        if (!startTime) startTime = timestamp;
-        const progress = (timestamp - startTime) / animationDuration;
+const startTyping = () => {
+  isTyping.value = true;
+  displayText.value = "";
+  displayWords.value = [];
+  currentIndex.value = 0;
+  animationProgress.value = 0;
+  typeNextChar();
+};
 
-        if (progress <= 1) {
-          this.animationProgress = progress;
-          requestAnimationFrame(animate);
-        } else {
-          this.isAnimating = false;
-          setTimeout(() => {
-            this.startTyping();
-          }, 1000);
-        }
-      };
-
-      requestAnimationFrame(animate);
-    },
-    getWordAnimationStyle(wordIndex) {
-      if (!this.isAnimating) return {};
-
-      const words = this.fullText.split(' ');
-      const totalWords = words.length;
-
-      // 调整动画时间分配，确保所有单词都有动画
-      const durationPerWord = 1 / (totalWords + 1); // 为每个单词分配相等的时间份额
-
-      // 计算每个单词的动画时间窗口
-      const wordStartTime = wordIndex * durationPerWord;
-      const wordEndTime = wordStartTime + durationPerWord * 2; // 增加单个单词的动画时间
-
-      // 计算当前单词的动画进度
-      let wordProgress = 0;
-
-      if (this.animationProgress >= wordStartTime && this.animationProgress <= wordEndTime) {
-        // 在时间窗口内，计算单词的具体动画进度
-        wordProgress = (this.animationProgress - wordStartTime) / durationPerWord;
-        // 将进度标准化到0-1范围
-        wordProgress = Math.min(1, wordProgress);
-        // 使用缓动函数创建更自然的动画
-        wordProgress = this.easeOutBack(Math.min(1, wordProgress));
-      }
-
-      // 最大跳跃高度（像素）
-      const maxJumpHeight = 25;
-
-      // 计算Y轴偏移
-      const yOffset = -wordProgress * maxJumpHeight;
-
-      return {
-        transform: `translateY(${yOffset}px)`,
-        transition: 'transform 0.1s ease-out'
-      };
-    },
-    // 缓动函数：添加一点回弹效果
-    easeOutBack(t) {
-      const c1 = 1.70158;
-      const c3 = c1 + 1;
-      return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
-    }
+const typeNextChar = () => {
+  if (currentIndex.value < fullText.value.length) {
+    displayText.value += fullText.value[currentIndex.value];
+    displayWords.value = displayText.value.split(' ');
+    currentIndex.value++;
+    setTimeout(typeNextChar, 100);
+  } else {
+    isTyping.value = false;
+    setTimeout(startRopeAnimation, 500);
   }
+};
+
+const startRopeAnimation = () => {
+  isAnimating.value = true;
+  let startTime = null;
+  const animationDuration = 2000;
+
+  const animate = (timestamp) => {
+    if (!startTime) startTime = timestamp;
+    const progress = (timestamp - startTime) / animationDuration;
+
+    if (progress <= 1) {
+      animationProgress.value = progress;
+      requestAnimationFrame(animate);
+    } else {
+      isAnimating.value = false;
+      setTimeout(() => {
+        startTyping();
+      }, 1000);
+    }
+  };
+
+  requestAnimationFrame(animate);
+};
+
+const getWordAnimationStyle = (wordIndex) => {
+  if (!isAnimating.value) return {};
+
+  const words = fullText.value.split(' ');
+  const totalWords = words.length;
+  const durationPerWord = 1 / (totalWords + 1);
+  const wordStartTime = wordIndex * durationPerWord;
+  const wordEndTime = wordStartTime + durationPerWord * 2;
+  let wordProgress = 0;
+
+  if (animationProgress.value >= wordStartTime && animationProgress.value <= wordEndTime) {
+    wordProgress = (animationProgress.value - wordStartTime) / durationPerWord;
+    wordProgress = Math.min(1, wordProgress);
+    wordProgress = easeOutBack(Math.min(1, wordProgress));
+  }
+
+  const maxJumpHeight = 25;
+  const yOffset = -wordProgress * maxJumpHeight;
+
+  return {
+    transform: `translateY(${yOffset}px)`,
+    transition: 'transform 0.1s ease-out'
+  };
+};
+
+const easeOutBack = (t) => {
+  const c1 = 1.70158;
+  const c3 = c1 + 1;
+  return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
 };
 </script>
 
