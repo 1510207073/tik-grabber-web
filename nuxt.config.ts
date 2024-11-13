@@ -1,7 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   app: {
+    // baseURL: '/tik-grabber-web/',
     buildAssetsDir: '/static/',
+  },
+  dir: {
+    pages: 'pages',
   },
   ssr: false, // Github pages require
   compatibilityDate: '2024-04-03',
